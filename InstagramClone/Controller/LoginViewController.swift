@@ -53,10 +53,11 @@ class LoginViewController: UIViewController {
     let dontHaveAccountButton: UIButton = {
         let button = UIButton(type: UIButton.ButtonType.system)
         
-        let attributedString = NSMutableAttributedString(string: "Don't have an account?   ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+        let attributedString = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         attributedString.append(NSMutableAttributedString(string: "Sign up", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.5843137255, green: 0.8, blue: 0.9568627451, alpha: 1)]))
-        
         button.setAttributedTitle(attributedString, for: .normal)
+        
+        button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
         
         return button
     }()
@@ -65,6 +66,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
  
         view.backgroundColor = UIColor.white
+        navigationController?.navigationBar.isHidden = true
         
         view.addSubview(logoContainerView)
         logoContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 140)
@@ -73,6 +75,11 @@ class LoginViewController: UIViewController {
         
         view.addSubview(dontHaveAccountButton)
         dontHaveAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+    }
+    
+    @objc func handleShowSignUp() {
+        let signUpVC = SignUpViewController()
+        navigationController?.pushViewController(signUpVC, animated: true)
     }
     
     func configureViewComponents() {
