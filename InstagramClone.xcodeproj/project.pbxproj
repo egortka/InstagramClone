@@ -16,6 +16,12 @@
 		51634668223732230095AF81 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51634666223732230095AF81 /* LaunchScreen.storyboard */; };
 		51634673223732D50095AF81 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51634672223732D50095AF81 /* LoginViewController.swift */; };
 		51634678223735560095AF81 /* Extansions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51634677223735560095AF81 /* Extansions.swift */; };
+		5173579F2238A26000CB1E1F /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5173579E2238A26000CB1E1F /* MainTabViewController.swift */; };
+		517357A12238A66A00CB1E1F /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517357A02238A66A00CB1E1F /* FeedViewController.swift */; };
+		517357A32238A6A300CB1E1F /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517357A22238A6A300CB1E1F /* SearchViewController.swift */; };
+		517357A52238A6D100CB1E1F /* UploadPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517357A42238A6D100CB1E1F /* UploadPostViewController.swift */; };
+		517357A72238A70A00CB1E1F /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517357A62238A70A00CB1E1F /* NotificationsViewController.swift */; };
+		517357A92238A74200CB1E1F /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 517357A82238A74200CB1E1F /* UserProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +36,12 @@
 		51634669223732230095AF81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		51634672223732D50095AF81 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		51634677223735560095AF81 /* Extansions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extansions.swift; sourceTree = "<group>"; };
+		5173579E2238A26000CB1E1F /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
+		517357A02238A66A00CB1E1F /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		517357A22238A6A300CB1E1F /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		517357A42238A6D100CB1E1F /* UploadPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostViewController.swift; sourceTree = "<group>"; };
+		517357A62238A70A00CB1E1F /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
+		517357A82238A74200CB1E1F /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		873680CC99C0EAB4A954337F /* Pods-InstagramClone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramClone.debug.xcconfig"; path = "Target Support Files/Pods-InstagramClone/Pods-InstagramClone.debug.xcconfig"; sourceTree = "<group>"; };
 		B047E19BB189CDD31F7ED54D /* Pods-InstagramClone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramClone.release.xcconfig"; path = "Target Support Files/Pods-InstagramClone/Pods-InstagramClone.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,6 +121,12 @@
 			children = (
 				51634672223732D50095AF81 /* LoginViewController.swift */,
 				51140B4D2237538200F551B6 /* SignUpViewController.swift */,
+				5173579E2238A26000CB1E1F /* MainTabViewController.swift */,
+				517357A02238A66A00CB1E1F /* FeedViewController.swift */,
+				517357A22238A6A300CB1E1F /* SearchViewController.swift */,
+				517357A42238A6D100CB1E1F /* UploadPostViewController.swift */,
+				517357A62238A70A00CB1E1F /* NotificationsViewController.swift */,
+				517357A82238A74200CB1E1F /* UserProfileViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -254,9 +272,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				517357A72238A70A00CB1E1F /* NotificationsViewController.swift in Sources */,
+				517357A92238A74200CB1E1F /* UserProfileViewController.swift in Sources */,
+				5173579F2238A26000CB1E1F /* MainTabViewController.swift in Sources */,
+				517357A32238A6A300CB1E1F /* SearchViewController.swift in Sources */,
 				51634673223732D50095AF81 /* LoginViewController.swift in Sources */,
+				517357A52238A6D100CB1E1F /* UploadPostViewController.swift in Sources */,
 				51634678223735560095AF81 /* Extansions.swift in Sources */,
 				51140B4E2237538200F551B6 /* SignUpViewController.swift in Sources */,
+				517357A12238A66A00CB1E1F /* FeedViewController.swift in Sources */,
 				5163465E223732210095AF81 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

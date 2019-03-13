@@ -147,6 +147,7 @@ class SignUpViewController: UIViewController, UIImagePickerControllerDelegate, U
         guard let password = passwordTextField.text else { return }
         guard let fullName = fullNameTextField.text else { return }
         guard let username = usernameTextField.text else { return }
+        guard let profileImage = addPhotoButton.imageView?.image else { return }
         
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
             
@@ -155,9 +156,6 @@ class SignUpViewController: UIViewController, UIImagePickerControllerDelegate, U
                 print("Failed to create user with error: \(error.localizedDescription)")
                 return
             }
-            
-            // set profile image
-            guard let profileImage = self.addPhotoButton.imageView?.image else { return }
             
             // data to upload
             guard let uploadData = profileImage.jpegData(compressionQuality: 0.3) else { return }
@@ -170,10 +168,12 @@ class SignUpViewController: UIViewController, UIImagePickerControllerDelegate, U
                 //handle error
                 if let error = error {
                     print("Failed to upload profile image", error.localizedDescription)
+                    return
                 }
                 
                 // profile image url
                 storageRef.downloadURL(completion: { (downloadURL, error) in
+                    
                     guard let profileImageUrl = downloadURL?.absoluteString else {
                         print("DEBUG: Profile image url is nil")
                         return
