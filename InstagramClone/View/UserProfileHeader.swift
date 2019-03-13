@@ -12,6 +12,17 @@ class UserProfileHeader: UICollectionViewCell {
     
     // MARK: - properties
     
+    var user: User? {
+        
+        didSet{
+            nameLabel.text = user?.name
+            if let url = user?.profileImageUrl {
+                profileImageView.loadImage(with: url)
+            }
+        }
+        
+    }
+    
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill

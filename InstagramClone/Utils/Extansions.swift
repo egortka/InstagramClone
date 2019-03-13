@@ -40,3 +40,41 @@ extension UIView{
     }
     
 }
+
+var imageCache = [String: UIImage]()
+
+extension UIImageView {
+    
+    func loadImage(with urlString: String) {
+        
+        // check if image exist in cache
+        if let cachedImage = imageCache[urlString] {
+            self.image = cachedImage
+            return
+        }
+        
+        // if image does not exist
+        guard let url = URL(string: urlString) else { return }
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        
+            // handle error
+            if let error = error {
+                print("Failed to load image from url: ", error.localizedDescription)
+                return
+            }
+            
+            // handle image data
+            guard let imageData = data else { return }
+        
+            // set image to cache
+            let loadedImage = UIImage(data: imageData)
+            imageCache[urlString] = loadedImage
+            
+            // set image to image view
+            DispatchQueue.main.async {
+                self.image = loadedImage
+            }
+        }.resume()
+        
+    }
+}

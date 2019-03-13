@@ -16,6 +16,8 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
 
     // MARK: - Properties
     
+    var user: User?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -57,7 +59,12 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         // configure header
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath)
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as! UserProfileHeader
+        if let user = self.user {
+            header.user = user
+        } else {
+            print("User was not set")
+        }
         
         return header
     }
@@ -68,9 +75,16 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
         
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-        Database.database().reference().child("users").child(currentUid).child("username").observeSingleEvent(of: .value) { (snapShot) in
-            guard let username = snapShot.value as? String else { return }
-                self.navigationItem.title = username
+        Database.database().reference().child("users").child(currentUid).observeSingleEvent(of: .value) { (snapShot) in
+            guard let userDictionary = snapShot.value as? Dictionary<String, AnyObject> else { return }
+            
+            let uid = snapShot.key
+            let user = User(uid: uid, dictionart: userDictionary)
+            
+            self.navigationItem.title = user.userName
+            self.user = user
+            self.collectionView.reloadData()
+            
         }
     }
 }
