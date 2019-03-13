@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MainTabViewController: UITabBarController, UITabBarControllerDelegate {
 
@@ -17,6 +18,9 @@ class MainTabViewController: UITabBarController, UITabBarControllerDelegate {
         
         // configure view controllers
         configureViewControllers()
+        
+        // check if user is logged in
+        checkUserIsLoggedIn()
     }
     
     // create view controllers that exist within tab bar controller
@@ -52,6 +56,18 @@ class MainTabViewController: UITabBarController, UITabBarControllerDelegate {
         navigationController.navigationBar.tintColor = .black
         
         return navigationController
+    }
+    
+    func checkUserIsLoggedIn() {
+        
+        if Auth.auth().currentUser == nil {
+            DispatchQueue.main.async {
+                // present log in screen
+                let navigationController = UINavigationController(rootViewController: LoginViewController())
+                self.present(navigationController, animated: true, completion: nil)
+            }
+        }
+        
     }
 
 }

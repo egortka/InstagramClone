@@ -107,9 +107,10 @@ class LoginViewController: UIViewController {
             }
             
             print("Successfully signed user in")
-            
-            let mainViewController = MainTabViewController()
-            self.present(mainViewController, animated: true, completion: nil)
+            //TODO: need it?
+//            guard let mainViewController = UIApplication.shared.keyWindow?.rootViewController as? MainTabViewController else { return }
+//            mainViewController.configureViewControllers()
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
