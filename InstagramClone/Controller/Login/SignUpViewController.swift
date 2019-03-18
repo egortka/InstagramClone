@@ -146,7 +146,7 @@ class SignUpViewController: UIViewController, UIImagePickerControllerDelegate, U
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         guard let fullName = fullNameTextField.text else { return }
-        guard let username = usernameTextField.text else { return }
+        guard let username = usernameTextField.text?.lowercased() else { return }
         guard let profileImage = addPhotoButton.imageView?.image else { return }
         
         Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
@@ -162,7 +162,7 @@ class SignUpViewController: UIViewController, UIImagePickerControllerDelegate, U
             
             // place image to firebase storage
             let fileName = NSUUID().uuidString
-            let storageRef = Storage.storage().reference().child("profile_images").child(fileName)
+            let storageRef = STORAGE_PROFILE_IMAGES_REF.child(fileName)
             storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
                 
                 //handle error
@@ -187,22 +187,20 @@ class SignUpViewController: UIViewController, UIImagePickerControllerDelegate, U
                     let values = [uid: dictionaryValues]
                     
                     //save user data to database
-                    Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+                    USERS_REF.updateChildValues(values, withCompletionBlock: { (error, ref) in
                         if let error = error {
                             print("Failed to save data to data base", error)
                             return
                         }
                         print("Successfully created user and saved data to database")
+                        
+                        guard let mainTabViewController = UIApplication.shared.keyWindow?.rootViewController as? MainTabViewController else { return }
+                        mainTabViewController.configureViewControllers()
+                        self.dismiss(animated: true, completion: nil)
                     })
                 })
                 
             })
-            
-            
-            
-            
-            //success
-                print("Successfully created user")
         }
     }
     

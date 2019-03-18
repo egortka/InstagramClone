@@ -7,18 +7,27 @@
 //
 
 import UIKit
+import Firebase
 
 class UserProfileHeader: UICollectionViewCell {
     
     // MARK: - properties
+
+    var delegate: UserProfileHeaderDelegate?
     
     var user: User? {
         
         didSet{
+            
+            configureEditProfileFollowButton()
+            
+            setUserStats()
+            
             nameLabel.text = user?.name
             if let url = user?.profileImageUrl {
                 profileImageView.loadImage(with: url)
             }
+            
         }
         
     }
@@ -33,7 +42,7 @@ class UserProfileHeader: UICollectionViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Dummy text"
+        label.text = "Loading.."
         label.font = UIFont.boldSystemFont(ofSize: 12)
         return label
     }()
@@ -42,7 +51,7 @@ class UserProfileHeader: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        let attributedText = NSMutableAttributedString(string: "5\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
         label.attributedText = attributedText
         return label
@@ -52,7 +61,7 @@ class UserProfileHeader: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        let attributedText = NSMutableAttributedString(string: "5\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
         label.attributedText = attributedText
         return label
@@ -62,20 +71,21 @@ class UserProfileHeader: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        let attributedText = NSMutableAttributedString(string: "5\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
         label.attributedText = attributedText
         return label
     }()
     
-    let editProfileButton: UIButton = {
+    lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Edit Profile", for: .normal)
+        button.setTitle("Loading..", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.black, for: .normal)
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
         button.layer.cornerRadius = 3
+        button.addTarget(self, action: #selector(handleEditProfileFollowTapped), for: .touchUpInside)
         return button
     }()
     
@@ -99,6 +109,7 @@ class UserProfileHeader: UICollectionViewCell {
         return button
     }()
     
+    //MARK: init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -116,8 +127,8 @@ class UserProfileHeader: UICollectionViewCell {
         configureUserStats()
         
         //add edit profile button
-        self.addSubview(editProfileButton)
-        editProfileButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 30)
+        self.addSubview(editProfileFollowButton)
+        editProfileFollowButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 30)
         
         // add bottom tool bar
         configureBottomToolBar()
@@ -160,6 +171,41 @@ class UserProfileHeader: UICollectionViewCell {
         self.addSubview(stack)
         
         stack.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 50)
+    }
+    
+    func setUserStats() {
+        delegate?.setUserStats(for: self)
+    }
+    
+    func configureEditProfileFollowButton() {
+        
+        guard let currentUserUid = Auth.auth().currentUser?.uid else { return }
+        guard let user = self.user else { return }
+        
+        if user.uid == currentUserUid {
+            
+            // configure as edit profile button
+            editProfileFollowButton.setTitle("Edit Profile", for: .normal)
+            
+        } else {
+        
+            // configure as follow button
+            
+            editProfileFollowButton.setTitleColor(.white, for: .normal)
+            editProfileFollowButton.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.6039215686, blue: 0.9294117647, alpha: 1)
+            user.checkIsUserFollowed { (followed) in
+                if followed {
+                    self.editProfileFollowButton.setTitle("Following", for: .normal)
+                } else {
+                    self.editProfileFollowButton.setTitle("Follow", for: .normal)
+                }
+            }
+        }
+    }
+    
+    //MARK: handlers
+    @objc func handleEditProfileFollowTapped() {
+        delegate?.handleEditFollowTapped(for: self)
     }
     
 }

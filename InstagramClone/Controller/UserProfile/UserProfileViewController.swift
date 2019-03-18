@@ -12,11 +12,14 @@ import Firebase
 private let reuseIdentifier = "Cell"
 private let headerIdentifier = "UserProfileHeader"
 
-class UserProfileViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class UserProfileViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UserProfileHeaderDelegate {
 
     // MARK: - Properties
     
     var user: User?
+    var userToLoadFromSearch: User?
+    
+    // MARK: - Init
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +32,9 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
         self.collectionView.backgroundColor = .white
         
         // fetch user data
-        fetchCurrentUserData()
+        if userToLoadFromSearch == nil {
+            fetchCurrentUserData()
+        }
     }
 
 
@@ -60,13 +65,63 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
         
         // configure header
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as! UserProfileHeader
+        
+        header.delegate = self
+        
         if let user = self.user {
             header.user = user
-        } else {
-            print("User was not set")
+        } else if let userToLoadFromSearch = self.userToLoadFromSearch {
+            header.user = userToLoadFromSearch
+            navigationItem.title = userToLoadFromSearch.username
         }
         
         return header
+    }
+    
+    // MARK: - UserProfileHeaderDelegate
+    
+    func handleEditFollowTapped(for header: UserProfileHeader) {
+        guard let user = header.user else { return }
+        
+        // handle user follow/unfollow
+        if header.editProfileFollowButton.titleLabel?.text == "Follow" {
+            header.editProfileFollowButton.setTitle("Following", for: .normal)
+            user.follow()
+        } else if header.editProfileFollowButton.titleLabel?.text == "Following" {
+            header.editProfileFollowButton.setTitle("Follow", for: .normal)
+            user.unfollow()
+        }
+    }
+    
+    func setUserStats(for header: UserProfileHeader) {
+        guard let uid = header.user?.uid else { return }
+        
+        var numerOfFollowers = 0
+        var numberOfFollowing = 0
+        
+        // get number of followers
+        USER_FOLLOWERS_REF.child(uid).observe(.value) { (snapshot) in
+            if let followers = snapshot.value as? Dictionary<String, AnyObject> {
+                numerOfFollowers = followers.count
+            } else {
+                numerOfFollowers = 0
+            }
+            let attributedText = NSMutableAttributedString(string: "\(numerOfFollowers)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+            attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
+            header.followersLabel.attributedText = attributedText
+        }
+        
+        // get number of following
+        USER_FOLLOWING_REF.child(uid).observe(.value) { (snapshot) in
+            if let followers = snapshot.value as? Dictionary<String, AnyObject> {
+                numberOfFollowing = followers.count
+            } else {
+                numberOfFollowing = 0
+            }
+            let attributedText = NSMutableAttributedString(string: "\(numberOfFollowing)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+            attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
+            header.followingLabel.attributedText = attributedText
+        }
     }
     
     // MARK: - API
@@ -75,13 +130,13 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
         
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-        Database.database().reference().child("users").child(currentUid).observeSingleEvent(of: .value) { (snapShot) in
+        USERS_REF.child(currentUid).observeSingleEvent(of: .value) { (snapShot) in
             guard let userDictionary = snapShot.value as? Dictionary<String, AnyObject> else { return }
             
             let uid = snapShot.key
             let user = User(uid: uid, dictionart: userDictionary)
             
-            self.navigationItem.title = user.userName
+            self.navigationItem.title = user.username
             self.user = user
             self.collectionView.reloadData()
             
