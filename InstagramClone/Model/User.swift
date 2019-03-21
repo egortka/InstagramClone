@@ -68,11 +68,8 @@ class User {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         guard let uid = self.uid else { return }
         
-        print(uid)
-        
         Database.database().reference().child("user-following").child(currentUid).observeSingleEvent(of: .value) { (snapshot) in
             
-            print(snapshot)
             if snapshot.hasChild(uid) {
                 
                 self.isFollowed = true

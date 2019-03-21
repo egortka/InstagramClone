@@ -13,11 +13,11 @@ private let reuseIdentifier = "Cell"
 private let headerIdentifier = "UserProfileHeader"
 
 class UserProfileViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UserProfileHeaderDelegate {
-
+  
     // MARK: - Properties
     
     var user: User?
-    var userToLoadFromSearch: User?
+   // var userToLoadFromSearch: User?
     
     // MARK: - Init
     
@@ -32,7 +32,7 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
         self.collectionView.backgroundColor = .white
         
         // fetch user data
-        if userToLoadFromSearch == nil {
+        if self.user == nil {
             fetchCurrentUserData()
         }
     }
@@ -68,17 +68,27 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
         
         header.delegate = self
         
-        if let user = self.user {
-            header.user = user
-        } else if let userToLoadFromSearch = self.userToLoadFromSearch {
-            header.user = userToLoadFromSearch
-            navigationItem.title = userToLoadFromSearch.username
-        }
+        header.user = self.user
+        navigationItem.title = user?.username
         
         return header
     }
     
-    // MARK: - UserProfileHeaderDelegate
+    // MARK: - UserProfileHeader protocol
+    
+    func handleFollowersTapped(for header: UserProfileHeader) {
+        let followViewController = FollowViewController()
+        followViewController.uid = self.user?.uid
+        followViewController.isFollowers = true
+        navigationController?.pushViewController(followViewController, animated: true)
+    }
+    
+    func handleFollowingTapped(for header: UserProfileHeader) {
+        let followViewController = FollowViewController()
+        followViewController.uid = self.user?.uid
+        followViewController.isFollowing = true
+        navigationController?.pushViewController(followViewController, animated: true)
+    }
     
     func handleEditFollowTapped(for header: UserProfileHeader) {
         guard let user = header.user else { return }
@@ -107,7 +117,7 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
                 numerOfFollowers = 0
             }
             let attributedText = NSMutableAttributedString(string: "\(numerOfFollowers)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-            attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
+            attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray]))
             header.followersLabel.attributedText = attributedText
         }
         
@@ -119,7 +129,7 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
                 numberOfFollowing = 0
             }
             let attributedText = NSMutableAttributedString(string: "\(numberOfFollowing)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-            attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)]))
+            attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray]))
             header.followingLabel.attributedText = attributedText
         }
     }

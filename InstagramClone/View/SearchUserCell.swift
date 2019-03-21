@@ -10,6 +10,8 @@ import UIKit
 
 class SearchUserCell: UITableViewCell {
     
+    // MARK: - Properties
+    
     var user: User? {
         didSet {
             
@@ -32,15 +34,18 @@ class SearchUserCell: UITableViewCell {
         return imageView
     }()
     
+    // MARK: - Init
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .none
         
         //add profile image view
         self.addSubview(profileImageView)
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 48, height: 48)
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.layer.cornerRadius = 48 / 2
-        profileImageView.clipsToBounds = true
         
         //add profile name and username
         self.textLabel?.text = "Username"
@@ -59,6 +64,8 @@ class SearchUserCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        self.textLabel?.frame.origin.x = 68
+        self.detailTextLabel?.frame.origin.x = 68
         self.textLabel?.frame.origin.y -= 2
     }
 

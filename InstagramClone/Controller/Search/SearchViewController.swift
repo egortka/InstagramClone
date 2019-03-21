@@ -24,8 +24,8 @@ class SearchViewController: UITableViewController {
         //table view row height
         tableView.rowHeight = 60
         
-        // seporator insets
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 64, bottom: 0, right: 0)
+        // seporator color
+        tableView.separatorColor = .clear
         
         // configure navigation controller
         configureNavigationController()
@@ -54,7 +54,7 @@ class SearchViewController: UITableViewController {
         let user = users[indexPath.row]
         
         let userProfileViewController = UserProfileViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        userProfileViewController.userToLoadFromSearch = user
+        userProfileViewController.user = user
         navigationController?.pushViewController(userProfileViewController, animated: true)
     }
     
@@ -69,16 +69,10 @@ class SearchViewController: UITableViewController {
         USERS_REF.observe(.childAdded) { (snapshot) in
             
             let uid = snapshot.key
-            
-            // snapshot value cast as dictionary
-            guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
-            
-            // constrat user from uid and dictionary
-            let user = User(uid: uid, dictionart: dictionary)
-            
-            self.users.append(user)
-            
-            self.tableView.reloadData()
+            Database.fetchUser(with: uid, complition: { (user) in
+                self.users.append(user)
+                self.tableView.reloadData()
+            })
             
         }
     }
