@@ -10,10 +10,10 @@ import Firebase
 
 class User {
     
-    var username: String?
-    var name: String?
-    var profileImageUrl: String?
-    var uid: String?
+    var username: String!
+    var name: String!
+    var profileImageUrl: String!
+    var uid: String!
     var isFollowed = false
     
     init(uid: String, dictionart: Dictionary<String, AnyObject>) {
@@ -48,6 +48,12 @@ class User {
         
         // set following user to followed user followers list
         USER_FOLLOWERS_REF.child(uid).updateChildValues([currentUid: 1])
+        
+        // add followed user posts to current user feed
+        USER_POSTS_REF.child(uid).observe(.childAdded) { (snapshot) in
+            let postId = snapshot.key
+            USER_FEED_REF.child(currentUid).updateChildValues([postId : 1])
+        }
     }
     
     func unfollow() {
@@ -62,6 +68,12 @@ class User {
         
         // set following user to followed user followers list
         USER_FOLLOWERS_REF.child(uid).child(currentUid).removeValue()
+        
+        // remove unfollowed user posts from current user feed
+        USER_POSTS_REF.child(uid).observe(.childAdded) { (snapshot) in
+            let postId = snapshot.key
+            USER_FEED_REF.child(currentUid).child(postId).removeValue()
+        }
     }
     
     func checkIsUserFollowed(complition: @escaping(Bool) -> ()) {

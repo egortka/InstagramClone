@@ -16,6 +16,7 @@ let STORAGE_REF = Storage.storage().reference()
 //MARK: - Storage references
 
 let STORAGE_PROFILE_IMAGES_REF = STORAGE_REF.child("profile_images")
+let STORAGE_POSTS_IMAGES_RES = STORAGE_REF.child("post_images")
 
 //MARK: - Database References
 
@@ -23,3 +24,8 @@ let USERS_REF = DB_REF.child("users")
 
 let USER_FOLLOWERS_REF = DB_REF.child("user-followers")
 let USER_FOLLOWING_REF = DB_REF.child("user-following")
+
+let POSTS_REF = DB_REF.child("posts")
+let USER_POSTS_REF = DB_REF.child("user-posts")
+
+let USER_FEED_REF = DB_REF.child("user-feed")

@@ -32,8 +32,8 @@ class MainTabViewController: UITabBarController, UITabBarControllerDelegate {
         // search feed controller
         let searchViewController = constructNavigationController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: SearchViewController())
         
-        // upload post controller
-        let uploadPostViewController = constructNavigationController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "plus_unselected"), rootViewController: UploadPostViewController())
+        // select image controller
+        let selectImageViewController = constructNavigationController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "plus_unselected"))
         
         // notification controller
         let notificationViewController = constructNavigationController(unselectedImage: #imageLiteral(resourceName: "like_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"), rootViewController: NotificationsViewController())
@@ -42,9 +42,25 @@ class MainTabViewController: UITabBarController, UITabBarControllerDelegate {
         let profileViewController = constructNavigationController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: UserProfileViewController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         // view controllers to be added to tab controller
-        viewControllers = [feedViewController, searchViewController, uploadPostViewController, notificationViewController, profileViewController]
+        viewControllers = [feedViewController, searchViewController, selectImageViewController, notificationViewController, profileViewController]
         tabBar.tintColor = .black
         
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        let index = viewControllers?.firstIndex(of: viewController)
+        
+        if index == 2 {
+            
+            let selectImageViewController = SelectImageViewController(collectionViewLayout: UICollectionViewFlowLayout())
+            let navigationController = UINavigationController(rootViewController: selectImageViewController)
+            navigationController.navigationBar.tintColor = .black
+            present(navigationController, animated: true, completion: nil)
+    
+            return false
+        }
+        
+        return true
     }
     
     func constructNavigationController(unselectedImage: UIImage, selectedImage: UIImage, rootViewController: UIViewController = UIViewController()) -> UINavigationController {
