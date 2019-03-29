@@ -150,7 +150,10 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     
     func handleCommentTapped(for cell: FeedCell) {
-        print("Cavabanga!")
+        guard let postId = cell.post?.postId else { return }
+        let commentViewController = CommentViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        commentViewController.postId = postId
+        navigationController?.pushViewController(commentViewController, animated: true)
     }
     
     // MARK: - Handlers

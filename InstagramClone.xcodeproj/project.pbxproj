@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		225829EE4B3E42D6DEBE9593 /* Pods_InstagramClone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33BBF5FBB4429D27D9AC6B34 /* Pods_InstagramClone.framework */; };
 		51140B4E2237538200F551B6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51140B4D2237538200F551B6 /* SignUpViewController.swift */; };
+		511F2422224EA7B500FD4E7F /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511F2421224EA7B500FD4E7F /* CommentViewController.swift */; };
+		511F2424224EA90100FD4E7F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511F2423224EA90100FD4E7F /* CommentCell.swift */; };
+		511F2426224EC79E00FD4E7F /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511F2425224EC79E00FD4E7F /* Comment.swift */; };
 		5120CCC6223EA2A5006B08A0 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5120CCC5223EA2A5006B08A0 /* Protocols.swift */; };
 		5122FD7A223ADE8000FCC168 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5122FD79223ADE8000FCC168 /* SearchUserCell.swift */; };
 		513D86912240342000DAA328 /* FollowLikeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513D86902240342000DAA328 /* FollowLikeCell.swift */; };
@@ -41,6 +44,9 @@
 /* Begin PBXFileReference section */
 		33BBF5FBB4429D27D9AC6B34 /* Pods_InstagramClone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramClone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		51140B4D2237538200F551B6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		511F2421224EA7B500FD4E7F /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
+		511F2423224EA90100FD4E7F /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		511F2425224EC79E00FD4E7F /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		5120CCC5223EA2A5006B08A0 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		5122FD79223ADE8000FCC168 /* SearchUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
 		513D86902240342000DAA328 /* FollowLikeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowLikeCell.swift; sourceTree = "<group>"; };
@@ -135,6 +141,7 @@
 			children = (
 				517357B22239973800CB1E1F /* User.swift */,
 				51CF2B792244195D001EED21 /* Post.swift */,
+				511F2425224EC79E00FD4E7F /* Comment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -149,6 +156,7 @@
 				51CF2B772243E20A001EED21 /* SelectPhotoHeader.swift */,
 				51CF2B7B22442709001EED21 /* UserPostCell.swift */,
 				515D31F12244F41400B8E9C7 /* FeedCell.swift */,
+				511F2423224EA90100FD4E7F /* CommentCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -191,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				517357A02238A66A00CB1E1F /* FeedViewController.swift */,
+				511F2421224EA7B500FD4E7F /* CommentViewController.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -372,8 +381,10 @@
 				5122FD7A223ADE8000FCC168 /* SearchUserCell.swift in Sources */,
 				513D86932240349F00DAA328 /* FollowLikeViewController.swift in Sources */,
 				5161D4DD223F88130095A447 /* Constants.swift in Sources */,
+				511F2422224EA7B500FD4E7F /* CommentViewController.swift in Sources */,
 				51CF2B762243E1A9001EED21 /* SelectPhotoCell.swift in Sources */,
 				517357A32238A6A300CB1E1F /* SearchViewController.swift in Sources */,
+				511F2424224EA90100FD4E7F /* CommentCell.swift in Sources */,
 				51CF2B7C22442709001EED21 /* UserPostCell.swift in Sources */,
 				51634673223732D50095AF81 /* LoginViewController.swift in Sources */,
 				517357A52238A6D100CB1E1F /* UploadPostViewController.swift in Sources */,
@@ -385,6 +396,7 @@
 				51CF2B742243E0E8001EED21 /* SelectImageViewController.swift in Sources */,
 				517357A12238A66A00CB1E1F /* FeedViewController.swift in Sources */,
 				513D86912240342000DAA328 /* FollowLikeCell.swift in Sources */,
+				511F2426224EC79E00FD4E7F /* Comment.swift in Sources */,
 				5163465E223732210095AF81 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

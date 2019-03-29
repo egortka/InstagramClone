@@ -208,6 +208,7 @@ class FeedCell: UICollectionViewCell {
     }
     @objc func handleDoubleTapToLike() {
         delegate?.handleLikeTapped(for: self, isDoubleTap: true)
+        handleLikeAnimation()
     }
     @objc func handleCommentTapped() {
         delegate?.handleCommentTapped(for: self)
@@ -217,6 +218,19 @@ class FeedCell: UICollectionViewCell {
     }
     func configureLikeButton() {
         delegate?.handleConfigureLikeButton(for: self)
+    }
+    func handleLikeAnimation() {
+        let image = UIImageView(image: #imageLiteral(resourceName: "like-white"))
+        image.clipsToBounds = true
+        postImageView.addSubview(image)
+        image.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 80, height: 80)
+        image.centerXAnchor.constraint(equalTo: postImageView.centerXAnchor).isActive = true
+        image.centerYAnchor.constraint(equalTo: postImageView.centerYAnchor).isActive = true
+        UIView.animateKeyframes(withDuration: 0.2, delay: 0, options: UIView.KeyframeAnimationOptions.autoreverse, animations: {
+            image.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        }) { (success) in
+            image.removeFromSuperview()
+        }
     }
     
 }
