@@ -11,8 +11,8 @@
 		51140B4E2237538200F551B6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51140B4D2237538200F551B6 /* SignUpViewController.swift */; };
 		5120CCC6223EA2A5006B08A0 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5120CCC5223EA2A5006B08A0 /* Protocols.swift */; };
 		5122FD7A223ADE8000FCC168 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5122FD79223ADE8000FCC168 /* SearchUserCell.swift */; };
-		513D86912240342000DAA328 /* FollowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513D86902240342000DAA328 /* FollowCell.swift */; };
-		513D86932240349F00DAA328 /* FollowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513D86922240349F00DAA328 /* FollowViewController.swift */; };
+		513D86912240342000DAA328 /* FollowLikeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513D86902240342000DAA328 /* FollowLikeCell.swift */; };
+		513D86932240349F00DAA328 /* FollowLikeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513D86922240349F00DAA328 /* FollowLikeViewController.swift */; };
 		5158F2162237A6680020BBA0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5158F2152237A6670020BBA0 /* GoogleService-Info.plist */; };
 		515D31F22244F41400B8E9C7 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 515D31F12244F41400B8E9C7 /* FeedCell.swift */; };
 		5161D4DD223F88130095A447 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5161D4DC223F88130095A447 /* Constants.swift */; };
@@ -43,8 +43,8 @@
 		51140B4D2237538200F551B6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		5120CCC5223EA2A5006B08A0 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		5122FD79223ADE8000FCC168 /* SearchUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
-		513D86902240342000DAA328 /* FollowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowCell.swift; sourceTree = "<group>"; };
-		513D86922240349F00DAA328 /* FollowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowViewController.swift; sourceTree = "<group>"; };
+		513D86902240342000DAA328 /* FollowLikeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowLikeCell.swift; sourceTree = "<group>"; };
+		513D86922240349F00DAA328 /* FollowLikeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowLikeViewController.swift; sourceTree = "<group>"; };
 		5158F2152237A6670020BBA0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		515D31F12244F41400B8E9C7 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		5161D4DC223F88130095A447 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -144,7 +144,7 @@
 			children = (
 				517357B02239743400CB1E1F /* UserProfileHeader.swift */,
 				5122FD79223ADE8000FCC168 /* SearchUserCell.swift */,
-				513D86902240342000DAA328 /* FollowCell.swift */,
+				513D86902240342000DAA328 /* FollowLikeCell.swift */,
 				51CF2B752243E1A9001EED21 /* SelectPhotoCell.swift */,
 				51CF2B772243E20A001EED21 /* SelectPhotoHeader.swift */,
 				51CF2B7B22442709001EED21 /* UserPostCell.swift */,
@@ -224,7 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				517357A82238A74200CB1E1F /* UserProfileViewController.swift */,
-				513D86922240349F00DAA328 /* FollowViewController.swift */,
+				513D86922240349F00DAA328 /* FollowLikeViewController.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -370,7 +370,7 @@
 				515D31F22244F41400B8E9C7 /* FeedCell.swift in Sources */,
 				5173579F2238A26000CB1E1F /* MainTabViewController.swift in Sources */,
 				5122FD7A223ADE8000FCC168 /* SearchUserCell.swift in Sources */,
-				513D86932240349F00DAA328 /* FollowViewController.swift in Sources */,
+				513D86932240349F00DAA328 /* FollowLikeViewController.swift in Sources */,
 				5161D4DD223F88130095A447 /* Constants.swift in Sources */,
 				51CF2B762243E1A9001EED21 /* SelectPhotoCell.swift in Sources */,
 				517357A32238A6A300CB1E1F /* SearchViewController.swift in Sources */,
@@ -384,7 +384,7 @@
 				51140B4E2237538200F551B6 /* SignUpViewController.swift in Sources */,
 				51CF2B742243E0E8001EED21 /* SelectImageViewController.swift in Sources */,
 				517357A12238A66A00CB1E1F /* FeedViewController.swift in Sources */,
-				513D86912240342000DAA328 /* FollowCell.swift in Sources */,
+				513D86912240342000DAA328 /* FollowLikeCell.swift in Sources */,
 				5163465E223732210095AF81 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

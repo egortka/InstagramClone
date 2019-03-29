@@ -29,6 +29,8 @@ class FeedCell: UICollectionViewCell {
             
             self.postImageView.loadImage(with: imageUrl)
             self.likesLabel.text = "\(likes) likes"
+            
+            self.configureLikeButton()
         }
         
     }
@@ -38,6 +40,7 @@ class FeedCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
+
         return imageView
     }()
     
@@ -59,11 +62,16 @@ class FeedCell: UICollectionViewCell {
         return button
     }()
     
-    let postImageView: CustomImageView = {
+    lazy var postImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
+        
+        let likeTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTapToLike))
+        likeTap.numberOfTapsRequired = 2
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(likeTap)
         return imageView
     }()
     
@@ -99,10 +107,14 @@ class FeedCell: UICollectionViewCell {
         return button
     }()
     
-    let likesLabel: UILabel = {
+    lazy var likesLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
         label.text = "3 likes"
+        let likeTap = UITapGestureRecognizer(target: self, action: #selector(handleShowLikes))
+        likeTap.numberOfTapsRequired = 1
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(likeTap)
         return label
     }()
     
@@ -188,14 +200,23 @@ class FeedCell: UICollectionViewCell {
     @objc func handleUsernameTapped() {
         delegate?.handleUsernameTapped(for: self)
     }
-    @objc func handleOptionsTapped(for cell: FeedCell) {
+    @objc func handleOptionsTapped() {
         delegate?.handleOptionsTapped(for: self)
     }
-    @objc func handleLikeTapped(for cell: FeedCell) {
-        delegate?.handleLikeTapped(for: self)
+    @objc func handleLikeTapped() {
+        delegate?.handleLikeTapped(for: self, isDoubleTap: false)
     }
-    @objc func handleCommentTapped(for cell: FeedCell) {
+    @objc func handleDoubleTapToLike() {
+        delegate?.handleLikeTapped(for: self, isDoubleTap: true)
+    }
+    @objc func handleCommentTapped() {
         delegate?.handleCommentTapped(for: self)
+    }
+    @objc func handleShowLikes() {
+        delegate?.handleShowLikes(for: self)
+    }
+    func configureLikeButton() {
+        delegate?.handleConfigureLikeButton(for: self)
     }
     
 }

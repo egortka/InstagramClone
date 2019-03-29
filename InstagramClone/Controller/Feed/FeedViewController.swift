@@ -12,7 +12,7 @@ import Firebase
 private let reuseIdentifier = "FeedCell"
 
 class FeedViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, FeedCellDelegate {
-    
+
     // MARK: - Properties
     
     var posts = [Post]()
@@ -53,7 +53,7 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
         return CGSize(width: width, height: height)
     }
     
-    // MARK: UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -82,7 +82,7 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
         return cell
     }
 
-    // MARK: FeedCellDelegate Protocol
+    // MARK: - FeedCellDelegate Protocol
     
     func handleUsernameTapped(for cell: FeedCell) {
         
@@ -97,21 +97,60 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
         print("Cavabanga!")
     }
     
-    func handleLikeTapped(for cell: FeedCell) {
-        print("Cavabanga!")
+    func handleLikeTapped(for cell: FeedCell, isDoubleTap: Bool) {
+        
+        guard let post = cell.post else { return }
+        
+        if post.didLike {
+            if !isDoubleTap {
+                cell.likeButton.isEnabled = false
+                post.adjustLikes(addLike: false) { (likes) in
+                    cell.likeButton.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+                    self.setLikesLabel(for: cell, to: likes)
+                    cell.likeButton.isEnabled = true
+                }
+            }
+        } else {
+            cell.likeButton.isEnabled = false
+            post.adjustLikes(addLike: true) { (likes) in
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
+                self.setLikesLabel(for: cell, to: likes)
+                cell.likeButton.isEnabled = true
+            }
+        }
     }
+    
+    func handleConfigureLikeButton(for cell: FeedCell) {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let post = cell.post else { return }
+        guard let postId = cell.post?.postId else { return }
+        
+        USER_LIKES_REF.child(currentUid).observeSingleEvent(of: .value) { (snapshot) in
+            
+            if snapshot.hasChild(postId) {
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
+                post.didLike = true
+            } else {
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+                post.didLike = false
+            }
+        }
+ 
+    }
+    
+    func handleShowLikes(for cell: FeedCell) {
+        guard let postId = cell.post?.postId else { return }
+
+        let likesViewController = FollowLikeViewController()
+        likesViewController.viewingMode = FollowLikeViewController.ViewingMode(index: 2)
+        likesViewController.postID = postId
+        navigationController?.pushViewController(likesViewController, animated: true)
+    }
+    
     
     func handleCommentTapped(for cell: FeedCell) {
         print("Cavabanga!")
-    }
-    
-    // MARK: - Utils
-    
-    func configureNavigationBar() {
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self, action: #selector(handleShowMessages))
-        self.navigationItem.title = "Feed"
     }
     
     // MARK: - Handlers
@@ -152,6 +191,20 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
         
     }
     
+    func configureNavigationBar() {
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self, action: #selector(handleShowMessages))
+        self.navigationItem.title = "Feed"
+    }
+    
+    func setLikesLabel(for cell: FeedCell, to value: Int) {
+        cell.likesLabel.text = "\(value) like"
+        if value != 1 {
+            cell.likesLabel.text?.append(contentsOf: "s")
+        }
+    }
+    
     // MARK: - API
     
     func fetchPosts() {
@@ -174,7 +227,6 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
                 
                 self.collectionView.reloadData()
             })
-            
         }
     }
 }

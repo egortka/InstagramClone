@@ -102,16 +102,16 @@ class UserProfileViewController: UICollectionViewController, UICollectionViewDel
     // MARK: - UserProfileHeader protocol
     
     func handleFollowersTapped(for header: UserProfileHeader) {
-        let followViewController = FollowViewController()
+        let followViewController = FollowLikeViewController()
         followViewController.uid = self.user?.uid
-        followViewController.isFollowers = true
+        followViewController.viewingMode = FollowLikeViewController.ViewingMode(index: 1)
         navigationController?.pushViewController(followViewController, animated: true)
     }
     
     func handleFollowingTapped(for header: UserProfileHeader) {
-        let followViewController = FollowViewController()
+        let followViewController = FollowLikeViewController()
         followViewController.uid = self.user?.uid
-        followViewController.isFollowing = true
+        followViewController.viewingMode = FollowLikeViewController.ViewingMode(index: 0)
         navigationController?.pushViewController(followViewController, animated: true)
     }
     
