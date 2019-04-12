@@ -10,11 +10,15 @@ import Firebase
 
 class User {
     
+    // MARK: - Properties
+    
     var username: String!
     var name: String!
     var profileImageUrl: String!
     var uid: String!
     var isFollowed = false
+    
+    // MARK: - Init
     
     init(uid: String, dictionart: Dictionary<String, AnyObject>) {
         
@@ -34,7 +38,7 @@ class User {
         
     }
     
-    //MARK: - follow methods
+    //MARK: - Methods
     
     func follow() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
@@ -48,6 +52,9 @@ class User {
         
         // set following user to followed user followers list
         USER_FOLLOWERS_REF.child(uid).updateChildValues([currentUid: 1])
+        
+        // upload follow notification to server
+        uploadFollowNotificationToServer()
         
         // add followed user posts to current user feed
         USER_POSTS_REF.child(uid).observe(.childAdded) { (snapshot) in
@@ -94,6 +101,19 @@ class User {
                 
             }
         }
-        
     }
+    
+    func uploadFollowNotificationToServer() {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        let creationDate = Int(Date().timeIntervalSince1970)
+    
+        let values = ["checked": 0,
+                      "creationDate": creationDate,
+                      "uid": currentUid,
+                      "type": FOLLOW_INT_VALUE] as [String: Any]
+        
+        NOTIFICATIONS_REF.child(self.uid).childByAutoId().updateChildValues(values)
+    }
+    
 }

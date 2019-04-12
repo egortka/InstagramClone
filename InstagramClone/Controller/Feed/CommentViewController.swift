@@ -15,7 +15,7 @@ class CommentViewController: UICollectionViewController, UICollectionViewDelegat
     
     // MARK: - Properties
     
-    var postId: String?
+    var post: Post?
     var comments = [Comment]()
     
     
@@ -131,7 +131,7 @@ class CommentViewController: UICollectionViewController, UICollectionViewDelegat
         
         
         guard commentTextField.hasText else { return }
-        guard let postId = self.postId else { return }
+        guard let postId = self.post?.postId else { return }
         guard let commentText = commentTextField.text else { return }
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let creationDate = Double(NSDate().timeIntervalSince1970)
@@ -143,6 +143,7 @@ class CommentViewController: UICollectionViewController, UICollectionViewDelegat
                       "uid": uid] as [String : Any]
         
         COMMENTS_REF.child(postId).childByAutoId().updateChildValues(values) { (err, ref) in
+            self.uploadCommentNotificationToServer()
             self.commentTextField.text = nil
             self.postButton.isEnabled = true
         }
@@ -150,7 +151,7 @@ class CommentViewController: UICollectionViewController, UICollectionViewDelegat
     
     func fetchComments() {
         
-        guard let postId = self.postId else { return }
+        guard let postId = self.post?.postId else { return }
         
         COMMENTS_REF.child(postId).observe(.childAdded) { (snapshot) in
             
@@ -166,5 +167,25 @@ class CommentViewController: UICollectionViewController, UICollectionViewDelegat
             })
         }
         
+    }
+    
+    func uploadCommentNotificationToServer() {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let postId = post?.postId else { return }
+        guard let ownerUid = post?.ownerUid else { return }
+        let creationDate = Int(Date().timeIntervalSince1970)
+        
+        if currentUid != ownerUid {
+            
+            let values = ["checked": 0,
+                          "creationDate": creationDate,
+                          "uid": currentUid,
+                          "type": COMMENT_INT_VALUE,
+                          "postId": postId] as [String: Any]
+            
+            // upload comment notification
+            NOTIFICATIONS_REF.child(ownerUid).childByAutoId().updateChildValues(values)
+        }
     }
 }

@@ -11,10 +11,14 @@ import Firebase
 
 class Comment {
     
+    // MARK: - Properties
+    
     var uid: String!
     var commentText: String!
     var creationDate: Date!
     var user: User?
+    
+    // MARK: - Init
     
     init(with user: User, dictionary: Dictionary<String, AnyObject>) {
         
@@ -31,6 +35,7 @@ class Comment {
         if let date = dictionary["creationDate"] as? Double {
             self.creationDate = Date(timeIntervalSince1970: date)
         }
-        
     }
+    
+    // MARK: - Methods
 }

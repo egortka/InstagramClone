@@ -7,84 +7,120 @@
 //
 
 import UIKit
+import Firebase
 
-class NotificationsViewController: UITableViewController {
+private let reuseIdentifier = "NotificationCell"
 
+class NotificationsViewController: UITableViewController, NotificationCellDelegate {
+
+    // MARK: - Properties
+    
+    var notifications = [Notification]()
+    
+    // MARK: - Init
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        // clear seporator line
+        tableView.separatorStyle = .none
+        
+        // set navigation title
+        navigationItem.title = "Notifications"
+        
+        // register cell class
+        tableView.register(NotificationCell.self, forCellReuseIdentifier: reuseIdentifier)
+        
+        // fetch notifications
+        fetchNotifications()
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return notifications.count
     }
-
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! NotificationCell
+        cell.notification = notifications[indexPath.row]
+        cell.delegate = self
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let notification = notifications[indexPath.row]
+        
+        let userProfileViewController = UserProfileViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        userProfileViewController.user = notification.user
+        
+        navigationController?.pushViewController(userProfileViewController, animated: true)
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    // MARK: - NotificationCellDelegate protocol
+    func handleFollowTapped(for cell: NotificationCell) {
+        
+        guard let user = cell.notification?.user else { return }
+        
+        if user.isFollowed {
+            user.unfollow()
+            cell.followButton.setTitle("Follow", for: .normal)
+            cell.followButton.setTitleColor(.white, for: .normal)
+            cell.followButton.layer.borderWidth = 0
+            cell.followButton.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.6039215686, blue: 0.9294117647, alpha: 1)
+        } else {
+            user.follow()
+            cell.followButton.setTitle("Following", for: .normal)
+            cell.followButton.setTitleColor(.black, for: .normal)
+            cell.followButton.layer.borderColor = UIColor.lightGray.cgColor
+            cell.followButton.layer.borderWidth = 0.5
+            cell.followButton.backgroundColor = .white
+        }
+        
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    func handlePostTapped(for cell: NotificationCell) {
+        
+        guard let post = cell.notification?.post else { return }
+        
+        let feedViewController = FeedViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        feedViewController.viewSinglePost = true
+        feedViewController.singlePostToPresent = post
+        navigationController?.pushViewController(feedViewController, animated: true)
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    // MARK: - API
+    
+    func fetchNotifications() {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        NOTIFICATIONS_REF.child(currentUid).observe(.childAdded) { (snapshot) in
+            
+            guard let dict = snapshot.value as? Dictionary<String, AnyObject> else { return }
+            guard let uid = dict["uid"] as? String else { return }
+            
+            Database.fetchUser(with: uid, complition: { (user) in
+                
+                if let postId = dict["postId"] as? String {
+                    Database.fetchPost(with: postId, complition: { (post) in
+                        
+                        let notification = Notification(user: user, post: post, dictionary: dict)
+                        self.notifications.append(notification)
+                        self.tableView.reloadData()
+                    })
+                } else {
+                    
+                    let notification = Notification(user: user, dictionary: dict)
+                    self.notifications.append(notification)
+                    self.tableView.reloadData()
+                }
+            })
+        }
+        
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

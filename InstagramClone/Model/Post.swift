@@ -11,6 +11,8 @@ import Firebase
 
 class Post {
     
+    // MARK: - Properties
+    
     var caption: String!
     var likes: Int!
     var imageUrl: String!
@@ -19,6 +21,8 @@ class Post {
     var postId: String!
     var user: User?
     var didLike = false
+    
+    // MARK: - Init
     
     init(user: User, postId: String, dictionary: Dictionary<String, AnyObject>) {
         
@@ -47,6 +51,8 @@ class Post {
         }
     }
     
+    // MARK: - Methods
+    
     func adjustLikes(addLike: Bool, completion: @escaping(Int) -> ()) {
         
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
@@ -58,6 +64,8 @@ class Post {
             POST_LIKES_REF.child(postId).updateChildValues([currentUid: 1]) { (error, ref) in
                 // add like to user-like structure
                 USER_LIKES_REF.child(currentUid).updateChildValues([postId: 1], withCompletionBlock: { (err, ref) in
+                    // send notification to server
+                    self.sendLikeNotificationToServer()
                     
                     self.likes += 1
                     self.didLike = true
@@ -66,8 +74,17 @@ class Post {
                 })
             }
         } else {
+            
+            // remove like
             guard likes > 0 else { return }
             
+            USER_LIKES_REF.child(currentUid).child(postId).observeSingleEvent(of: .value) { (snapshot) in
+                // notification id to remove
+                if let notificationId = snapshot.value as? String {
+                    // remove notification
+                    NOTIFICATIONS_REF.child(self.ownerUid).child(notificationId).removeValue()
+                }
+            }
             // remove like from post-like structure
             POST_LIKES_REF.child(self.postId).child(currentUid).removeValue { (err, ref) in
                 // remove like from user-like structure
@@ -78,6 +95,26 @@ class Post {
                     completion(self.likes)
                     POSTS_REF.child(self.postId).child("likes").setValue(self.likes)
                 })
+            }
+        }
+    }
+    
+    func sendLikeNotificationToServer() {
+        
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        let creationDate = Int(Date().timeIntervalSince1970)
+        
+        if currentUid != self.ownerUid {
+            
+            let values = ["checked": 0,
+                          "creationDate": creationDate,
+                          "uid": currentUid,
+                          "type": LIKE_INT_VALUE,
+                          "postId": postId] as [String: Any]
+            
+            let notificationRef = NOTIFICATIONS_REF.child(self.ownerUid).childByAutoId()
+            notificationRef.updateChildValues(values) { (err, ref) in
+                USER_LIKES_REF.child(currentUid).child(self.postId).setValue(notificationRef.key)
             }
         }
     }

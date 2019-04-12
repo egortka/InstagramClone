@@ -102,6 +102,7 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
         guard let post = cell.post else { return }
         
         if post.didLike {
+            //handle unlike post
             if !isDoubleTap {
                 cell.likeButton.isEnabled = false
                 post.adjustLikes(addLike: false) { (likes) in
@@ -111,6 +112,7 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
                 }
             }
         } else {
+            //handle like post
             cell.likeButton.isEnabled = false
             post.adjustLikes(addLike: true) { (likes) in
                 cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
@@ -150,9 +152,9 @@ class FeedViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     
     func handleCommentTapped(for cell: FeedCell) {
-        guard let postId = cell.post?.postId else { return }
+        guard let post = cell.post else { return }
         let commentViewController = CommentViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        commentViewController.postId = postId
+        commentViewController.post = post
         navigationController?.pushViewController(commentViewController, animated: true)
     }
     
